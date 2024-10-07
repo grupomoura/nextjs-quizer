@@ -135,52 +135,54 @@ const QuizerForm = () => {
       
       handleToggleAnswerSection(sectionAnswer)
     }
+
+    setAnswerType("radio")
   }
 
-  const  handleDefineCorrectAnswers = (checkboxValue) => {
+  const  handleDefineCorrectAnswers = (checkboxValue: string) => {
     if(corrects.includes(checkboxValue)) {
-      setCorrects(corrects.filter(item => item !== checkboxValue)) 
+      setCorrects(corrects.filter((item: string) => item !== checkboxValue)) 
     } else {
       setCorrects([...corrects, checkboxValue])
     }
   }
 
-  const handleModalAnswerEdit = (indexQuestion: number, answerToEdit: number) => {
-    setInputUpdateAnswer(questions[indexQuestion].answers[answerToEdit])
-  }
+  // const handleModalAnswerEdit = (indexQuestion: number, answerToEdit: number) => {
+  //   setInputUpdateAnswer(questions[indexQuestion].answers[answerToEdit])
+  // }
   
-  const handleUpdateAnswerModal = (indexQuestion: number, answerToEdit: any) => {
-    const updateAnswer = [...questions]
-    if(inputUpdateAnswer !== "") {
-      if(updateAnswer[indexQuestion].answerType === "text") {
-        updateAnswer[indexQuestion] = { ...updateAnswer[indexQuestion], correctAnswer: null }
-      }
-    }
+  // const handleUpdateAnswerModal = (indexQuestion: number, answerToEdit: any) => {
+  //   const updateAnswer = [...questions]
+  //   if(inputUpdateAnswer !== "") {
+  //     if(updateAnswer[indexQuestion].answerType === "text") {
+  //       updateAnswer[indexQuestion] = { ...updateAnswer[indexQuestion], correctAnswer: null }
+  //     }
+  //   }
 
-    if(updateAnswer[indexQuestion].answerType === "radio") {
-      if(inputUpdateAnswer !== "") {
-        updateAnswer[indexQuestion] = { ...updateAnswer[indexQuestion].answers[answerToEdit], answers: inputUpdateAnswer }
-      }
-    }
-  }
+  //   if(updateAnswer[indexQuestion].answerType === "radio") {
+  //     if(inputUpdateAnswer !== "") {
+  //       updateAnswer[indexQuestion] = { ...updateAnswer[indexQuestion].answers[answerToEdit], answers: inputUpdateAnswer }
+  //     }
+  //   }
+  // }
 
-  const handleDeleteAnswer = (indexQuestion: any, indexAnswer: any) => {
-    setUpdateAnswer(questions[indexQuestion].answers)
+  // const handleDeleteAnswer = (indexQuestion: any, indexAnswer: any) => {
+  //   setUpdateAnswer(questions[indexQuestion].answers)
     
-    setTimeout(() => {
-      setUpdateAnswer(updateAnswer => updateAnswer.filter((item, index) => index !== indexAnswer))
-    }, 300)
+  //   setTimeout(() => {
+  //     setUpdateAnswer(updateAnswer => updateAnswer.filter((item, index) => index !== indexAnswer))
+  //   }, 300)
     
-    if(questions[indexQuestion].answerType === "radio") {
-      if(updateAnswer.length > 2) { 
-        const removeAnswer = [...questions]
-        removeAnswer[indexQuestion] = { ...removeAnswer[indexQuestion], answers: updateAnswer }
-      } else {
-        alert("Esse tipo de resposta não pode conter menos de 2 opções")
-      }
-    }
+  //   if(questions[indexQuestion].answerType === "radio") {
+  //     if(updateAnswer.length > 2) { 
+  //       const removeAnswer = [...questions]
+  //       removeAnswer[indexQuestion] = { ...removeAnswer[indexQuestion], answers: updateAnswer }
+  //     } else {
+  //       alert("Esse tipo de resposta não pode conter menos de 2 opções")
+  //     }
+  //   }
 
-  }
+  // }
 
   
   return (
@@ -321,7 +323,7 @@ const QuizerForm = () => {
             </div>
 
             <div className="w-full p-5">
-                <div key={index} className="flex flex-col w-full">
+                <div className="flex flex-col w-full">
                   <ul>
                     {
                       item.answers.length > 0 && item.answerType === "radio" ?
@@ -350,12 +352,11 @@ const QuizerForm = () => {
                               </li>
                             )
                           })
-                        : item.answers !== null > 0 && item.answerType === "text" ? (
+                        : item.answers !== null && item.answerType === "text" && (
                           <li>
                             <p className="w-full border border-rose-600 p-3 rounded-xl text-rose-600">A avaliação para esse tipo de pergunta é feita de forma manual.</p>
                           </li>
                         )
-                          : null
                     }
                   </ul>
                 </div>
@@ -387,10 +388,10 @@ const QuizerForm = () => {
                   <div>
 
                     {
-                      answers.length > 0 ?
+                      answers.length > 0 &&
                         answers.map((answer: any, answerIndex: number) => {
                           return (
-                              <div key={answerIndex} className="flex flex-col w-full">
+                              <div key={answer} className="flex flex-col w-full">
                                 <ul className="">
                                   <li className="flex border border-slate-800 rounded-xl p-3 mb-3">
                                     <input
@@ -404,7 +405,6 @@ const QuizerForm = () => {
                               </div>
                             )
                         })
-                        : null
                     }
                     
                     <div className="flex flex-col">
@@ -444,15 +444,13 @@ const QuizerForm = () => {
 
                     </div>
                   </div>
-                )
-                  : answerType !== null && answerType === "radio" ? (
+                ) : answerType !== null && answerType === "radio" ? (
                     <div>
-
                       {
-                        answers.length > 0 ?
+                        answers.length > 0 &&
                           answers.map((answer: any, answerIndex: number) => {
                             return  (
-                              <div className="flex flex-col w-full">
+                              <div className="flex flex-col w-full" key={answerIndex}>
                                 <ul className="mb-1">
                                   <li className="flex border border-slate-800 rounded-xl p-3 mb-3">
                                     <input
@@ -468,7 +466,6 @@ const QuizerForm = () => {
                               </div>
                             )
                           })
-                          : null
                       }
                       
                       <div className="flex flex-col">                                
@@ -496,7 +493,7 @@ const QuizerForm = () => {
                       </div>
 
                     {
-                      answers.length >= 2 ? (
+                      answers.length >= 2 && (
                         <div className="flex">
                           <button
                             className="w-full py-2 px-4 bg-teal-600 hover:bg-teal-700 border-teal-700 hover:border-teal-800 text-slate-200 rounded-xl shadow-md"
@@ -504,13 +501,12 @@ const QuizerForm = () => {
                             Guardar Definições
                           </button>
                         </div>
-                      ) : null
+                      )
                     }
                     
                     </div>
                     
-                  ) : answerType !== null && answerType === "text" ? (
-                    
+                ) : answerType !== null && answerType === "text" && (
                     <div className="flex flex-col">
                       <p className="w-full border border-rose-600 p-3 rounded-xl text-rose-600 mb-5">A avaliação para esse tipo de pergunta é feita de forma manual.</p>
 
@@ -522,9 +518,7 @@ const QuizerForm = () => {
                         </button>
                       </div>
                     </div>
-                  ) : null
-
-                
+                  )
               }
  
             </div>
